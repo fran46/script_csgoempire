@@ -13,7 +13,15 @@ var heApostado = false;
 var ultimaApuesta = "";
 clientData.socket.on('roll', function(data){
 	//data contiene un objeto similar a: Object {winner: 14, timer: 30000, round: 978340, new_round: 978341}
-	console.log("Numero ganador de esta ronda el: "+data.winner);
+	if(data.winner==0) {
+		console.log("Ficha ganadora -> DATOS (num: "+data.winner+")");
+	} else {
+		if(data.winner<=7) {
+			console.log("Ficha ganadora -> T (num: "+data.winner+")");
+		} else {
+			console.log("Ficha ganadora -> CT (num: "+data.winner+")");
+		}
+	}
 	historico.unshift(data.winner); //añado el numero ganador al historico
 	apostarAl = ultimoNumero(); //obtengo el numero al que voy a apostar en la proxima ronda
 	setTimeout(function(){realizarApuesta(apostarAl)},9000); //a los 7 segundos (lo que tarda el rooll) envio la apuesta
