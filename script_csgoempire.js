@@ -1,5 +1,5 @@
 /* Script para csgoempire.com | Por fran_VR46 - comuesp.com */
-var apostarAl = ""; //  GameClient.place_bet('ct', bet_amount); -> t: es del 1-7 y ct del 8 al 14
+var apostarAl = ""; 
 var totalGanado = 0;
 var rachaPerdidas = 0;
 var apuestaBase = 1;
@@ -11,7 +11,7 @@ var historico = [];
 var totalApuestaActual = 0;
 var heApostado = false;
 var ultimaApuesta = "";
-GameClient.socket.on('roll', function(data){
+clientData.socket.on('roll', function(data){
 	//data contiene un objeto similar a: Object {winner: 14, timer: 30000, round: 978340, new_round: 978341}
 	console.log("Numero ganador de esta ronda el: "+data.winner);
 	historico.unshift(data.winner); //añado el numero ganador al historico
@@ -84,13 +84,15 @@ function realizarApuesta(numero) {
 		if(numero<=7) {
 			//T
 			console.log("Enviadno apuesta al: T");
-			GameClient.place_bet('t', totalApuestaActual);
+			//GameClient.place_bet('t', totalApuestaActual);
+			clientData.socket.emit("place bet", { round: clientData.round, coin: "t", amount: totalApuestaActual});
 			heApostado = true;
 			ultimaApuesta = "t";
 		} else {
 			//ct
 			console.log("Enviando apuesta al: CT");
-			GameClient.place_bet('ct', totalApuestaActual);
+			//GameClient.place_bet('ct', totalApuestaActual);
+			clientData.socket.emit("place bet", { round: clientData.round, coin: "ct", amount: totalApuestaActual});
 			heApostado = true;
 			ultimaApuesta = "ct";
 		}
