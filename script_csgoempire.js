@@ -9,10 +9,10 @@ e.innerHTML = '
 		<td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td>
 		<td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es igual o superior a:</td>
 		<td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser igual o superior a:</td>
-		<td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td>
+		<td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio" style="border-radius: 5px; background-color: #22894b;">Iniciar</button></td>
 	</tr>
 	<tr>
-		<td style="padding: 3px;vertical-align: top;"><select id="modo">
+		<td style="padding: 3px;vertical-align: top;"><select id="modo" style="height: 26px;border-radius: 5px;">
 		<option value="martingala-mismo-porcentaje">Mismo color + Porcentaje</option>
 		<option value="martingala-op-porcentaje">Color opuesto + Porcentaje</option>
 		<option value="martingala-op">Color opuesto</option>
@@ -21,10 +21,10 @@ e.innerHTML = '
 		<option value="aleatorio">Aleatorio</option>
 		<option value="porcentaje">Porcentaje</option>
 		</select></td>
-		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td>
-		<td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td>
-		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td>
-		<td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5" style="height: 26px;border-radius: 5px;"></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000" style="height: 26px;border-radius: 5px;"></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000" style="height: 26px;border-radius: 5px;"></td>
+		<td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()" style="border-radius: 5px; background-color: #a94442;">Detener</button></td>
 	</tr>
 	<tr>
 		<td style="padding: 3px;vertical-align: top;">
@@ -39,7 +39,7 @@ e.innerHTML = '
 </table>
 </div>';
 */
-e.innerHTML = '<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a><table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;"><tr><td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td><td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es igual o superior a:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser igual o superior a:</td><td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"><select id="modo"><option value="martingala-mismo-porcentaje">Mismo color + Porcentaje</option><option value="martingala-op-porcentaje">Color opuesto + Porcentaje</option><option value="martingala-op">Color opuesto</option><option value="martingala-mismo">Mismo color</option><option value="modo-espera">Modo espera</option><option value="aleatorio">Aleatorio</option><option value="porcentaje">Porcentaje</option> </select></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td><td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"> Total ganado: <span id="totalGanado"></span><br/> Perdidas: <span id="totalPerdido"></span><br/> Rondas jugadas: <span id="rondasJugadas"></span></td><td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;"><textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea></td></tr></table></div>';
+e.innerHTML = '<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a><table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;"><tr><td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td><td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es igual o superior a:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser igual o superior a:</td><td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio" style="border-radius: 5px; background-color: #22894b;">Iniciar</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"><select id="modo" style="height: 26px;border-radius: 5px;"><option value="martingala-mismo-porcentaje">Mismo color + Porcentaje</option><option value="martingala-op-porcentaje">Color opuesto + Porcentaje</option><option value="martingala-op">Color opuesto</option><option value="martingala-mismo">Mismo color</option><option value="modo-espera">Modo espera</option><option value="aleatorio">Aleatorio</option><option value="porcentaje">Porcentaje</option> </select></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5" style="height: 26px;border-radius: 5px;"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000" style="height: 26px;border-radius: 5px;"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000" style="height: 26px;border-radius: 5px;"></td><td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()" style="border-radius: 5px; background-color: #a94442;">Detener</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"> Total ganado: <span id="totalGanado"></span><br/> Perdidas: <span id="totalPerdido"></span><br/> Rondas jugadas: <span id="rondasJugadas"></span></td><td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;"><textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea></td></tr></table></div>';
 document.body.insertBefore(e, document.body.childNodes[2]);
 function ocultarTablaChat(){ document.getElementById("tablaScript").style.visibility="hidden"; }
 function mostrarTablaChat(){ document.getElementById("tablaScript").style.visibility="visible"; }
@@ -346,6 +346,10 @@ function realizarApuesta() {
 				start = 0;
 				pausa = 1;
 				document.getElementById("consolaScript").innerHTML += "Script detenido! Objetivo de ganancias alcanzado!.\n";
+				document.getElementById("apuestaBase").disabled = false;
+				document.getElementById("apuestaMax").disabled = false;
+				document.getElementById("maxGanado").disabled = false;
+				document.getElementById("modo").disabled = false;
 				heApostado == false;
 			} else {
 				if(numero!="") {
