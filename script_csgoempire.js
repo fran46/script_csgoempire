@@ -1,6 +1,45 @@
 /* Script para csgoempire.com | Por fran_VR46 - comuesp.com */
 e = document.createElement("div");
-e.innerHTML = '<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a><table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;"><tr><td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td><td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser superior a:</td><td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"><select id="modo"><option value="martingala-op">Martingala color opuesto</option><option value="martingala-mismo">Martingala mismo color</option><option value="modo-espera">Modo espera</option><option value="aleatorio">Aleatorio</option><option value="martingala-op-porcentaje">Martingala opuesto + Porcentaje</option><option value="martingala-mismo-porcentaje">Martingala mismo + Porcentaje</option><option value="porcentaje">Porcentaje</option> </select></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td><td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"> Total ganado: <span id="totalGanado"></span><br/> Perdidas: <span id="totalPerdido"></span><br/> Rondas jugadas: <span id="rondasJugadas"></span></td><td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;"><textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea></td></tr></table></div>';
+/*
+e.innerHTML = '
+<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a>
+<table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;">
+	<tr>
+		<td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td>
+		<td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td>
+		<td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es igual o superior a:</td>
+		<td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser igual o superior a:</td>
+		<td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td>
+	</tr>
+	<tr>
+		<td style="padding: 3px;vertical-align: top;"><select id="modo">
+		<option value="martingala-mismo-porcentaje">Mismo color + Porcentaje</option>
+		<option value="martingala-op-porcentaje">Color opuesto + Porcentaje</option>
+		<option value="martingala-op">Color opuesto</option>
+		<option value="martingala-mismo">Mismo color</option>
+		<option value="modo-espera">Modo espera</option>
+		<option value="aleatorio">Aleatorio</option>
+		<option value="porcentaje">Porcentaje</option>
+		</select></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td>
+		<td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td>
+		<td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td>
+	</tr>
+	<tr>
+		<td style="padding: 3px;vertical-align: top;">
+			Total ganado: <span id="totalGanado"></span><br/>
+			Perdidas: <span id="totalPerdido"></span><br/>
+			Rondas jugadas: <span id="rondasJugadas"></span>
+		</td>
+		<td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;">
+		 <textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea>
+		</td>
+	</tr>
+</table>
+</div>';
+*/
+e.innerHTML = '<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a><table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;"><tr><td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td><td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es igual o superior a:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser igual o superior a:</td><td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"><select id="modo"><option value="martingala-mismo-porcentaje">Mismo color + Porcentaje</option><option value="martingala-op-porcentaje">Color opuesto + Porcentaje</option><option value="martingala-op">Color opuesto</option><option value="martingala-mismo">Mismo color</option><option value="modo-espera">Modo espera</option><option value="aleatorio">Aleatorio</option><option value="porcentaje">Porcentaje</option> </select></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td><td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"> Total ganado: <span id="totalGanado"></span><br/> Perdidas: <span id="totalPerdido"></span><br/> Rondas jugadas: <span id="rondasJugadas"></span></td><td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;"><textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea></td></tr></table></div>';
 document.body.insertBefore(e, document.body.childNodes[2]);
 function ocultarTablaChat(){ document.getElementById("tablaScript").style.visibility="hidden"; }
 function mostrarTablaChat(){ document.getElementById("tablaScript").style.visibility="visible"; }
@@ -16,6 +55,7 @@ var totalApuestaActual = 0;
 var heApostado = false;
 var ultimaApuesta = 0;
 var apuestaMax = 0;
+var maxGanado = 0;
 var start = 0;
 var pausa = 1;
 var textarea = document.getElementById('consolaScript');
@@ -31,6 +71,10 @@ function iniciarScript() {
 		apuestaMax = parseInt(document.getElementById("apuestaMax").value);
 		document.getElementById("consolaScript").innerHTML += "Apuesta máxima a realizar: "+apuestaMax+"\n";
 		document.getElementById("apuestaMax").disabled = true;
+		
+		maxGanado = parseInt(document.getElementById("maxGanado").value);
+		document.getElementById("consolaScript").innerHTML += "El script se detendra si gana: "+maxGanado+"\n";
+		document.getElementById("maxGanado").disabled = true;
 		
 		modoJuego = document.getElementById("modo").value;
 		document.getElementById("consolaScript").innerHTML += "Modo de juego: "+modoJuego+"\n";
@@ -56,28 +100,30 @@ function detenerScript() {
 		document.getElementById("consolaScript").innerHTML += "Script detenido! No se realizará ninguna apuesta.\n";
 		document.getElementById("apuestaBase").disabled = false;
 		document.getElementById("apuestaMax").disabled = false;
+		document.getElementById("maxGanado").disabled = false;
 		document.getElementById("modo").disabled = false;
 	} else {
 		document.getElementById("consolaScript").innerHTML += "El script esta detenido! No se realizará ninguna apuesta.\n";
 	}
 }
 clientData.socket.on('roll', function(data){
-	
-	//data contiene un objeto similar a: Object {winner: 14, timer: 30000, round: 978340, new_round: 978341}
-	if(data.winner==0) {
-		document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> DADOS\n";
-		textarea.scrollTop = textarea.scrollHeight;
-	} else {
-		if(data.winner<=7) {
-			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> T\n";
-			textarea.scrollTop = textarea.scrollHeight;
-		} else {
-			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> CT\n";
-			textarea.scrollTop = textarea.scrollHeight;
-		}
-	}
 	//añado el numero ganador al historico
 	historico.unshift(data.winner);
+	
+	if(start==1) {
+		if(data.winner==0) {
+			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> DADOS\n";
+			textarea.scrollTop = textarea.scrollHeight;
+		} else {
+			if(data.winner<=7) {
+				document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> T\n";
+				textarea.scrollTop = textarea.scrollHeight;
+			} else {
+				document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> CT\n";
+				textarea.scrollTop = textarea.scrollHeight;
+			}
+		}
+	}
 	
 	//actualizo las stats
 	if(heApostado==true) {
@@ -121,10 +167,10 @@ function realizarApuesta() {
 		//¿A que color voy a apostar?
 		switch(modoJuego) {
 			case "martingala-mismo":
-				numero = obtnerUltimoNumeroValido(0);
+				numero = obtnerUltimoNumeroValido();
 				break;
 			case "martingala-op":
-				numero = obtnerUltimoNumeroValido(0);
+				numero = obtnerUltimoNumeroValido();
 				if(numero!="") {
 					if(numero<=7) {
 						mumero = 10;
@@ -134,7 +180,7 @@ function realizarApuesta() {
 				}
 				break;
 			case "martingala-op-porcentaje":
-					numero = obtnerUltimoNumeroValido(0);
+					numero = obtnerUltimoNumeroValido();
 					if(numero!="") {
 						if(numero<=7) {
 							mumero = 10;
@@ -169,7 +215,7 @@ function realizarApuesta() {
 					}
 				break;
 			case "martingala-mismo-porcentaje":
-					numero = obtnerUltimoNumeroValido(0);
+					numero = obtnerUltimoNumeroValido();
 					//recorro el array siempre y cuando sea mayor que 10
 					if(historico.length>=10) {
 						var ct = 0;
@@ -296,52 +342,57 @@ function realizarApuesta() {
 			document.getElementById("consolaScript").innerHTML += "Script detenido! La cantidad a apostar superaba la apuesta máxima establecida.\n";
 			heApostado == false;
 		} else {
-			if(numero!="") {
-				//Miro si el numero se corresponde a CT (del 8 al 14) o T (del 1 al 7)
-				if(numero<=7) {
-					//T
-					document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al T\n";
-					textarea.scrollTop = textarea.scrollHeight;
-
-					clientData.socket.emit("place bet", { round: clientData.round, coin: "t", amount: parseInt(totalApuestaActual)});
-					heApostado = true;
-					
-					rondasJugadas = rondasJugadas+1;
-					document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
-					
-					ultimaApuesta = numero;
-				} else {
-					//ct
-					document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al CT\n";
-					textarea.scrollTop = textarea.scrollHeight;
-
-					clientData.socket.emit("place bet", { round: clientData.round, coin: "ct", amount: parseInt(totalApuestaActual)});
-					heApostado = true;
-					
-					rondasJugadas = rondasJugadas+1;
-					document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
-					
-					ultimaApuesta = numero;
-				}
+			if(totalGanado>=maxGanado) {
+				start = 0;
+				pausa = 1;
+				document.getElementById("consolaScript").innerHTML += "Script detenido! Objetivo de ganancias alcanzado!.\n";
+				heApostado == false;
 			} else {
-				document.getElementById("consolaScript").innerHTML += "Ronda saltada sin apostar";
-				heApostado = false;
+				if(numero!="") {
+					//Miro si el numero se corresponde a CT (del 8 al 14) o T (del 1 al 7)
+					if(numero<=7) {
+						//T
+						document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al T\n";
+						textarea.scrollTop = textarea.scrollHeight;
+
+						clientData.socket.emit("place bet", { round: clientData.round, coin: "t", amount: parseInt(totalApuestaActual)});
+						heApostado = true;
+						
+						rondasJugadas = rondasJugadas+1;
+						document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
+						
+						ultimaApuesta = numero;
+					} else {
+						//ct
+						document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al CT\n";
+						textarea.scrollTop = textarea.scrollHeight;
+
+						clientData.socket.emit("place bet", { round: clientData.round, coin: "ct", amount: parseInt(totalApuestaActual)});
+						heApostado = true;
+						
+						rondasJugadas = rondasJugadas+1;
+						document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
+						
+						ultimaApuesta = numero;
+					}
+				} else {
+					document.getElementById("consolaScript").innerHTML += "Ronda saltada sin apostar";
+					heApostado = false;
+				}
 			}
 		}
 	}
 }
 
-function obtnerUltimoNumeroValido(start) {
-	if(historico[start]==undefined) {
-		return "";
-	} else {
-		//Esta funcion retorna el ultimo numero que ha salido distinto de 0
-		if(historico[start]!=0) {
-			//si no es verde!
-			return historico[start];
+function obtnerUltimoNumeroValido() {
+	//Devuelve el ultimo numero del historico distinto de 0
+	for (i=0; i <= 10; i++) { 
+		if(historico[i]==undefined) {
+			return "";
 		} else {
-			//si es verde, vuelvo a llamar a esta funcion. recursividad!
-			obtnerUltimoNumeroValido(start+1);
+			if(historico[i]!=0) {
+				return historico[i];
+			}
 		}
 	}
 }
