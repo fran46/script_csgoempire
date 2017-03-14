@@ -1,149 +1,347 @@
 /* Script para csgoempire.com | Por fran_VR46 - comuesp.com */
+e = document.createElement("div");
+e.innerHTML = '<div style="position: absolute; z-index:999999; width: 100%;"><a onclick="mostrarTablaChat()">Ver</a>/<a onclick="ocultarTablaChat()">Ocultar</a><table id="tablaScript" style="background-color: #ccc; border: 1px solid black; color: black;"><tr><td style="padding: 3px;vertical-align: bottom;">Modo de juego:</td><td style="padding: 3px;vertical-align: bottom;">Apuesta base:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la ganancia es:</td><td style="padding: 3px;vertical-align: bottom;">Detener si la apuesta va a ser superior a:</td><td style="padding: 3px;vertical-align: middle;"><button onclick="iniciarScript()" id="buttonInicio">Iniciar</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"><select id="modo"><option value="martingala-op">Martingala color opuesto</option><option value="martingala-mismo">Martingala mismo color</option><option value="modo-espera">Modo espera</option><option value="aleatorio">Aleatorio</option><option value="martingala-op-porcentaje">Martingala opuesto + Porcentaje</option><option value="martingala-mismo-porcentaje">Martingala mismo + Porcentaje</option><option value="porcentaje">Porcentaje</option> </select></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaBase" value="5"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="maxGanado" value="1000"></td><td style="padding: 3px;vertical-align: top;"><input type="number" id="apuestaMax" value="1000"></td><td style="padding: 3px;vertical-align: middle;"><button onclick="detenerScript()">Detener</button></td></tr><tr><td style="padding: 3px;vertical-align: top;"> Total ganado: <span id="totalGanado"></span><br/> Perdidas: <span id="totalPerdido"></span><br/> Rondas jugadas: <span id="rondasJugadas"></span></td><td colspan="4" height="120px" style="background-color: black;color: #31ff00;padding: 3px; font-size: 9px; height:120px; max-height:120px;"><textarea style="border: none;height: 100px; width:100%; overflow-y: scroll;background-color: black;color: #31ff00;" id="consolaScript"></textarea></td></tr></table></div>';
+document.body.insertBefore(e, document.body.childNodes[2]);
+function ocultarTablaChat(){ document.getElementById("tablaScript").style.visibility="hidden"; }
+function mostrarTablaChat(){ document.getElementById("tablaScript").style.visibility="visible"; }
 var apostarAl = ""; 
 var totalGanado = 0;
+var totalPerdido = 0;
 var rachaPerdidas = 0;
 var apuestaBase = 1;
-var modoJuego = "martingala+porcentaje"; //Elejir entre: "martingala" - "martingala+porcentaje" -  "aleatorio"
-//El modo "martingala" siempre apostara al ultimo color qe ha salido...
-//El modo "martingala+porcentaje" aportara al ultimo color que ha salido, excepto si en las ultimas 6 rondas no ha salido un color en concreto y apostara a ese color
-//El modo "aleatorio" apostara a un numero aleatorio, generado con la funcion random() de JavaScript
+var rondasJugadas = 0;
+var modoJuego = "martingala";
 var historico = []; 
 var totalApuestaActual = 0;
 var heApostado = false;
-var ultimaApuesta = "";
-clientData.socket.on('roll', function(data){
-	//data contiene un objeto similar a: Object {winner: 14, timer: 30000, round: 978340, new_round: 978341}
-	if(data.winner==0) {
-		console.log("Ficha ganadora -> DATOS (num: "+data.winner+")");
+var ultimaApuesta = 0;
+var apuestaMax = 0;
+var start = 0;
+var pausa = 1;
+var textarea = document.getElementById('consolaScript');
+function iniciarScript() {
+	
+	if(start!=1) {
+		document.getElementById("consolaScript").innerHTML += "Iniciando ejecución del script\n";
+		
+		apuestaBase = parseInt(document.getElementById("apuestaBase").value);
+		document.getElementById("consolaScript").innerHTML += "Apuesta base: "+apuestaBase+"\n";
+		document.getElementById("apuestaBase").disabled = true;
+		
+		apuestaMax = parseInt(document.getElementById("apuestaMax").value);
+		document.getElementById("consolaScript").innerHTML += "Apuesta máxima a realizar: "+apuestaMax+"\n";
+		document.getElementById("apuestaMax").disabled = true;
+		
+		modoJuego = document.getElementById("modo").value;
+		document.getElementById("consolaScript").innerHTML += "Modo de juego: "+modoJuego+"\n";
+		document.getElementById("modo").disabled = true;
+		
+		document.getElementById("totalGanado").innerHTML = totalGanado;
+		document.getElementById("totalPerdido").innerHTML = totalPerdido;
+		document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
+		
+		document.getElementById("consolaScript").innerHTML += "Iniciando script....\n";
+		textarea.scrollTop = textarea.scrollHeight;
+		
+		start = 1;
+		pausa = 0;
 	} else {
-		if(data.winner<=7) {
-			console.log("Ficha ganadora -> T (num: "+data.winner+")");
-		} else {
-			console.log("Ficha ganadora -> CT (num: "+data.winner+")");
-		}
-	}
-	historico.unshift(data.winner); //añado el numero ganador al historico
-	apostarAl = ultimoNumero(); //obtengo el numero al que voy a apostar en la proxima ronda
-	setTimeout(function(){realizarApuesta(apostarAl)},9000); //a los 7 segundos (lo que tarda el rooll) envio la apuesta
-});
-function ultimoNumero() {
-	//miro la longitud del historico. No apostare hasta qe tenga un historico de al menos 6 numeros:
-	if(historico.length<=6) {
-		//devuelvo vacio = no se apostara
-		console.log("En esta ronda no se apostara. Almacenando "+historico.length+"/6 jugadas en historico");
-		return "";
-	} else {
-		//Si ya he almacenado 6 numeros en el historico:
-		//Obtengo el ultimo numero que ha salido
-		var ultimoNumero = obtnerUltimoNumeroValido(0);
-		console.log("Ultimo numero en salir (distinto de 0): "+ultimoNumero);
-		//recorto el array a 6:
-		historico.length = 6;
-		console.log(historico);
-		return ultimoNumero;
+		document.getElementById("consolaScript").innerHTML += "El script ya esta en ejecución! espera un momento....\n";
 	}
 }
-function realizarApuesta(numero) {
-	if(numero == "") {
-		console.log("Ronda saltada sin apostar");
+function detenerScript() {
+	if(pausa!=1) {
+		start = 0;
+		pausa = 1;
+		document.getElementById("consolaScript").innerHTML += "Script detenido! No se realizará ninguna apuesta.\n";
+		document.getElementById("apuestaBase").disabled = false;
+		document.getElementById("apuestaMax").disabled = false;
+		document.getElementById("modo").disabled = false;
 	} else {
-		totalApuestaActual = obtenerCantidadApostar();
-		console.log("Apostare la cantidad de: "+totalApuestaActual+" coins");
-		
-		//En funcion del modo de juego...
+		document.getElementById("consolaScript").innerHTML += "El script esta detenido! No se realizará ninguna apuesta.\n";
+	}
+}
+clientData.socket.on('roll', function(data){
+	
+	//data contiene un objeto similar a: Object {winner: 14, timer: 30000, round: 978340, new_round: 978341}
+	if(data.winner==0) {
+		document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> DADOS\n";
+		textarea.scrollTop = textarea.scrollHeight;
+	} else {
+		if(data.winner<=7) {
+			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> T\n";
+			textarea.scrollTop = textarea.scrollHeight;
+		} else {
+			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> CT\n";
+			textarea.scrollTop = textarea.scrollHeight;
+		}
+	}
+	//añado el numero ganador al historico
+	historico.unshift(data.winner);
+	
+	//actualizo las stats
+	if(heApostado==true) {
+		//obtengo el ultimo numero que ha salido:
+		if(historico[0]==0) {
+			//Si salio verde, significa que he perdido
+			totalPerdido = totalPerdido + totalApuestaActual;
+			document.getElementById("totalPerdido").innerHTML = totalPerdido;
+		} else if(historico[0]<=7 && ultimaApuesta<=7) {
+			//Significa que ha salido T y he acertado
+			totalGanado = totalGanado + apuestaBase;
+			totalPerdido = 0;
+			document.getElementById("totalGanado").innerHTML = totalGanado;
+			document.getElementById("totalPerdido").innerHTML = totalPerdido;
+		} else if(historico[0]>=8 && ultimaApuesta>=8) {
+			//Significa que ha salido CT y he acertado
+			totalGanado = totalGanado + apuestaBase;
+			totalPerdido = 0;
+			document.getElementById("totalGanado").innerHTML = totalGanado;
+			document.getElementById("totalPerdido").innerHTML = totalPerdido;
+		} else {
+			//Significa que he perdido:
+			totalPerdido = totalPerdido + totalApuestaActual;
+			document.getElementById("totalPerdido").innerHTML = totalPerdido;
+		}
+	}
+	
+	if(start==1) {
+		//a los 10 segundos llamo a la funcion de apostar:
+		setTimeout(function(){realizarApuesta()},10000);
+	} else {
+		heApostado = false;
+	}
+	
+});
+
+function realizarApuesta() {
+	if(start==1) {
+		var numero = "";
+		//Compruebo el modo de juego
+		//¿A que color voy a apostar?
 		switch(modoJuego) {
-			case "martingala":
-				//Salgo directamente, ya que postare al ultimo numero en salir
+			case "martingala-mismo":
+				numero = obtnerUltimoNumeroValido(0);
 				break;
-			case "martingala+porcentaje":
-				//recorro el array
-				var ct = false;
-				var t = false;
-				for(aux in historico) {
-					if(historico[aux]!=0) {
-						if(historico[aux]<=7) {
-							t = true;
+			case "martingala-op":
+				numero = obtnerUltimoNumeroValido(0);
+				if(numero!="") {
+					if(numero<=7) {
+						mumero = 10;
+					} else {
+						numero = 5;
+					}
+				}
+				break;
+			case "martingala-op-porcentaje":
+					numero = obtnerUltimoNumeroValido(0);
+					if(numero!="") {
+						if(numero<=7) {
+							mumero = 10;
 						} else {
-							ct = true;
+							numero = 5;
 						}
 					}
-				}
-				if(!ct) {
-					//Si no ha salido ningun numero correspondiente a CT, apostare a CT
-					numero = 10;
-					console.log("No ha saludido ningun CT en las ultimas 6 rondas, asi que apostaremos al CT");
-				} else {
-					if(!t) {
-						//Si no ha salido ningun numero correspondiente a T, apostare a T
-						numero = 5;
-						console.log("No ha saludido ningun T en las ultimas 6 rondas, asi que apostaremos al T");
+					//recorro el array siempre y cuando sea mayor que 10
+					if(historico.length>=10) {
+						var ct = 0;
+						var t = 0;
+						for(aux in historico) {
+							if(historico[aux]!=0) {
+								if(historico[aux]<=7) {
+									t = t+1;
+								} else {
+									ct = ct+1;
+								}
+							}
+						}
+						if(ct<=2) {
+							//Si en las ultimas 10 rondas solo han salido 2 CT o menos, apostare a CT
+							numero = 10;
+						} else {
+							if(t<=2) {
+								//Si en las ultimas 10 rondas solo han salido 2 T o menos, apostare a T
+								numero = 5;
+							}
+						}
+					} else {
+						document.getElementById("consolaScript").innerHTML += "Se apostará al color opuesto! Aún no se han almacenado suficientes rondas en el histórico ("+historico.length+"/10) para calcular obtener el porcentaje. \n";
 					}
-				}
+				break;
+			case "martingala-mismo-porcentaje":
+					numero = obtnerUltimoNumeroValido(0);
+					//recorro el array siempre y cuando sea mayor que 10
+					if(historico.length>=10) {
+						var ct = 0;
+						var t = 0;
+						for(aux in historico) {
+							if(historico[aux]!=0) {
+								if(historico[aux]<=7) {
+									t = t+1;
+								} else {
+									ct = ct+1;
+								}
+							}
+						}
+						if(ct<=2) {
+							//Si en las ultimas 10 rondas solo han salido 2 CT o menos, apostare a CT
+							numero = 10;
+						} else {
+							if(t<=2) {
+								//Si en las ultimas 10 rondas solo han salido 2 T o menos, apostare a T
+								numero = 5;
+							}
+						}
+					} else {
+						document.getElementById("consolaScript").innerHTML += "Se apostará al mismo color! Aún no se han almacenado suficientes rondas en el histórico ("+historico.length+"/10) para calcular obtener el porcentaje. \n";
+					}
+				break;
+			case "modo-espera":
+					//recorro el array siempre y cuando sea mayor que 10
+					if(historico.length>=10) {
+						//recorro el array
+						var ct = false;
+						var t = false;
+						for(aux in historico) {
+							if(historico[aux]!=0) {
+								if(historico[aux]<=7) {
+									t = true;
+								} else {
+									ct = true;
+								}
+							}
+						}
+						if(!ct) {
+							//Si no ha salido ningun numero correspondiente a CT, apostare a CT
+							numero = 10;
+							document.getElementById("consolaScript").innerHTML += "CT no ha salido en las ultimas 10 rondas!\n";
+						} else {
+							if(!t) {
+								//Si no ha salido ningun numero correspondiente a T, apostare a T
+								numero = 5;
+								document.getElementById("consolaScript").innerHTML += "T no ha salido en las ultimas 10 rondas!\n";
+							} else {
+								numero = "";
+								document.getElementById("consolaScript").innerHTML += "Ronda saltada sin apostar! Esperando al momento oportuno...(CT y T han aparecido en las ultimas 10 rondas)\n";
+							}
+						}
+					} else {
+						document.getElementById("consolaScript").innerHTML += "Es necesario almacenar más rondas en el historico "+historico.length+"/10\n";
+					}
+				break;
+			case "porcentaje":
+					//recorro el array siempre y cuando sea mayor que 10
+					if(historico.length>=10) {
+						//recorro el array para ver el total de CT y T que ha salido
+						var ct = 0;
+						var t = 0;
+						for(aux in historico) {
+							if(historico[aux]!=0) {
+								if(historico[aux]<=7) {
+									t = t+1;
+								} else {
+									ct = ct+1;
+								}
+							}
+						}
+						if(ct==t) {
+							//Si han saludo las mismas veces en las ultimas 10 rondas... saco uno de ellos random
+							numero = Math.floor(Math.random() * (14 - 1)) + 1;
+						} else {
+							if(ct>t) {
+								//Si CT ha salido mas veces... apuesto entonces al T:
+								numero = 5;
+							} else {
+								//Significa que T ha salido mas veces... apuesto entonces al CT
+								numero = 10;
+							}
+						}
+					} else {
+						document.getElementById("consolaScript").innerHTML += "Es necesario almacenar más rondas en el historico "+historico.length+"/10\n";
+					}
 				break;
 			case "aleatorio":
-				//paso de todo los calculos anteriores y apuesto a un numero random...entre 1 y 14
-				numero = Math.floor(Math.random() * (14 - 1)) + 1;
+					//paso de todo los calculos anteriores y apuesto a un numero random...entre 1 y 14
+					numero = Math.floor(Math.random() * (14 - 1)) + 1;
 				break;
 			default:
 				break;
 		}
 		
-		//Miro si el numero se corresponde a CT (del 8 al 14) o T (del 1 al 7)
-		if(numero<=7) {
-			//T
-			console.log("Enviadno apuesta al: T");
-			//GameClient.place_bet('t', totalApuestaActual);
-			clientData.socket.emit("place bet", { round: clientData.round, coin: "t", amount: totalApuestaActual});
-			heApostado = true;
-			ultimaApuesta = "t";
+		//Comrpuebo si en la ultima ronda he ganado o he perdido
+		//¿Cuanto voy a apostar?
+		if(heApostado==true) {
+			//obtengo el ultimo numero que ha salido:
+			if(historico[0]==0) {
+				//Si salio verde, significa que he perdido
+				totalApuestaActual = parseInt(totalApuestaActual*2);
+			} else if(historico[0]<=7 && ultimaApuesta<=7) {
+				//Significa que ha salido T y he acertado
+				totalApuestaActual = parseInt(apuestaBase);
+			} else if(historico[0]>=8 && ultimaApuesta>=8) {
+				//Significa que ha salido CT y he acertado
+				totalApuestaActual = parseInt(apuestaBase);
+			} else {
+				//Significa que he perdido:
+				totalApuestaActual = parseInt(totalApuestaActual*2);
+			}
 		} else {
-			//ct
-			console.log("Enviando apuesta al: CT");
-			//GameClient.place_bet('ct', totalApuestaActual);
-			clientData.socket.emit("place bet", { round: clientData.round, coin: "ct", amount: totalApuestaActual});
-			heApostado = true;
-			ultimaApuesta = "ct";
+			totalApuestaActual = parseInt(apuestaBase);
+		}
+		
+		//Compruebo si la apuesta a realizar sobrepasa la apuesta maxima establecida:
+		if(totalApuestaActual>=apuestaMax) {
+			start = 0;
+			pausa = 1;
+			document.getElementById("consolaScript").innerHTML += "Script detenido! La cantidad a apostar superaba la apuesta máxima establecida.\n";
+			heApostado == false;
+		} else {
+			if(numero!="") {
+				//Miro si el numero se corresponde a CT (del 8 al 14) o T (del 1 al 7)
+				if(numero<=7) {
+					//T
+					document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al T\n";
+					textarea.scrollTop = textarea.scrollHeight;
+
+					clientData.socket.emit("place bet", { round: clientData.round, coin: "t", amount: parseInt(totalApuestaActual)});
+					heApostado = true;
+					
+					rondasJugadas = rondasJugadas+1;
+					document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
+					
+					ultimaApuesta = numero;
+				} else {
+					//ct
+					document.getElementById("consolaScript").innerHTML += "Enviando apuesta ["+totalApuestaActual+" coins] al CT\n";
+					textarea.scrollTop = textarea.scrollHeight;
+
+					clientData.socket.emit("place bet", { round: clientData.round, coin: "ct", amount: parseInt(totalApuestaActual)});
+					heApostado = true;
+					
+					rondasJugadas = rondasJugadas+1;
+					document.getElementById("rondasJugadas").innerHTML = rondasJugadas;
+					
+					ultimaApuesta = numero;
+				}
+			} else {
+				document.getElementById("consolaScript").innerHTML += "Ronda saltada sin apostar";
+				heApostado = false;
+			}
 		}
 	}
 }
 
 function obtnerUltimoNumeroValido(start) {
-	if(historico[start]!=0) {
-		//si no es verde!
-		return historico[start];
+	if(historico[start]==undefined) {
+		return "";
 	} else {
-		//si es verde, vuelvo a llamar a esta funcion. recursividad!
-		obtnerUltimoNumeroValido(start+1);
-	}
-}
-
-function obtenerCantidadApostar() {
-	if(heApostado==true) {
-		if(historico[0]==0) {
-			//Si el ultimo numero en salir ha sido 0 he perfifo seguro...
-			return totalApuestaActual*2;
+		//Esta funcion retorna el ultimo numero que ha salido distinto de 0
+		if(historico[start]!=0) {
+			//si no es verde!
+			return historico[start];
 		} else {
-			if(historico[0]<=7) {
-				if(ultimaApuesta=="t") {
-					//significa que en la ultima apuesta acerte!
-					return apuestaBase;
-				} else {
-					//perdi...
-					return totalApuestaActual*2;
-				}
-			} else {
-				if(historico[0]>=8) {
-					if(ultimaApuesta=="ct") {
-						//significa que en la ultima apuesta acerte!
-						return apuestaBase;
-					} else {
-						//perdi...
-						return totalApuestaActual*2;
-					}
-				}
-			}
+			//si es verde, vuelvo a llamar a esta funcion. recursividad!
+			obtnerUltimoNumeroValido(start+1);
 		}
-	} else {
-		return apuestaBase;
 	}
 }
