@@ -73,7 +73,7 @@ clientData.socket.on('roll', function(data){
 	//añado el numero ganador al historico
 	historico.unshift(data.winner);
 	//limito el tamaño del el array a 10 caracteres
-	historico.length = 10;
+	if(historico.length>=10) { historico.length=10; }
 	if(start==1) {
 		if(data.winner==0) {
 			document.getElementById("consolaScript").innerHTML += "(num: "+data.winner+") Ficha ganadora -> DADOS\n";
